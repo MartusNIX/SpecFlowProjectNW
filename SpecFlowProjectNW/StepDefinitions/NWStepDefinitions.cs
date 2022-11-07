@@ -1,3 +1,4 @@
+using Gherkin;
 using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 using SpecFlowProjectNW.Context;
@@ -9,9 +10,12 @@ namespace SpecFlowProjectNW.StepDefinitions
     public sealed class NWStepDefinitions
     {
         private readonly NorthwindContext nwContext;
-        public NWStepDefinitions()
+        private readonly ScenarioContext scenarioContext;
+        private int amount;
+        public NWStepDefinitions(ScenarioContext scenarioContext)
         {
             nwContext = new NorthwindContext();
+            this.scenarioContext = scenarioContext;
         }
 
         [When(@"the user chooses the table")]
@@ -23,12 +27,15 @@ namespace SpecFlowProjectNW.StepDefinitions
             {
                 Console.WriteLine($"{c.CategoryId}.{c.CategoryName}.{c.Description}");
             }
+            scenarioContext.Add("Amount", categories.Count);
         }
 
         [Then(@"the user sees data in the table")]
         public void ThenTheUserSeesDataInTheTable()
         {
-            Assert.IsTrue(true);
+            amount = scenarioContext.Get<int>("Amount");
+            var isAmountNotNull = amount != 0;
+            Assert.IsTrue(isAmountNotNull, "Table don't contain data");
         }
 
     }
