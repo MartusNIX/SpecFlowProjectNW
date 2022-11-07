@@ -12,6 +12,7 @@ namespace SpecFlowProjectNW.StepDefinitions
         private readonly NorthwindContext nwContext;
         private readonly ScenarioContext scenarioContext;
         private int amount;
+        private int amountAfterAction;
         public NWStepDefinitions(ScenarioContext scenarioContext)
         {
             nwContext = new NorthwindContext();
@@ -22,7 +23,7 @@ namespace SpecFlowProjectNW.StepDefinitions
         public void WhenTheUserChoosesTheTable()
         {
             var categories = nwContext.Categories.ToList();
-            Console.WriteLine("Current data:");
+            Console.WriteLine("\n Current data:");
             foreach (Category c in categories)
             {
                 Console.WriteLine($"{c.CategoryId}.{c.CategoryName}.{c.Description}");
@@ -35,7 +36,33 @@ namespace SpecFlowProjectNW.StepDefinitions
         {
             amount = scenarioContext.Get<int>("Amount");
             var isAmountNotNull = amount != 0;
-            Assert.IsTrue(isAmountNotNull, "Table don't contain data");
+            Assert.IsTrue(isAmountNotNull, "\n Table don't contain data");
+        }
+
+        [When(@"the user adds new data")]
+        public void WhenTheUserAddsNewData()
+        {
+            var categories = nwContext.Categories.ToList();
+            scenarioContext.Add("Amount", categories.Count);
+            Category category1 = new Category
+            {
+                CategoryName = "Drinks",
+                Description = "Water, Juice, Cidre"
+            };
+
+            nwContext.Categories.Add(category1);
+            nwContext.SaveChanges();
+
+            var categoriesAfterAction = nwContext.Categories.ToList();
+            scenarioContext.Add("AmountAfterAction", categoriesAfterAction.Count);
+        }
+
+        [Then(@"data is presented in table")]
+        public void ThenDataIsPresentedInTable()
+        {
+            amount = scenarioContext.Get<int>("Amount");
+            amountAfterAction = scenarioContext.Get<int>("AmountAfterAction");
+            Assert.AreEqual(amount + 1, amountAfterAction);
         }
 
     }
