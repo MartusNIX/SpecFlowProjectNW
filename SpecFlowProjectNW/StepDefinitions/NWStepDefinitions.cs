@@ -3,6 +3,7 @@ using SpecFlowProjectNW.Context;
 using SpecFlowProjectNW.Models;
 using TechTalk.SpecFlow;
 using TechTalk.SpecFlow.Assist;
+using SpecFlowProjectNW.Constants;
 
 namespace SpecFlowProjectNW.StepDefinitions
 {
@@ -29,13 +30,13 @@ namespace SpecFlowProjectNW.StepDefinitions
             {
                 Console.WriteLine($"{c.CategoryId}.{c.CategoryName}.{c.Description}");
             }
-            scenarioContext.Add("Amount", categories.Count);
+            scenarioContext.Add(StepConstants.Amount, categories.Count);
         }
 
         [Then(@"the user sees data in the table")]
         public void ThenTheUserSeesDataInTheTable()
         {
-            amount = scenarioContext.Get<int>("Amount");
+            amount = scenarioContext.Get<int>(StepConstants.Amount);
             var isAmountNotNull = amount != 0;
             Assert.IsTrue(isAmountNotNull, "\n Table don't contain data");
         }
@@ -44,23 +45,23 @@ namespace SpecFlowProjectNW.StepDefinitions
         public void WhenTheUserAddsNewDataInTable(Table table)
         {
             var categories = nwContext.Categories.ToList();
-            scenarioContext.Add("AmountBeforeAction", categories.Count);
+            scenarioContext.Add(StepConstants.AmountBeforeAction, categories.Count);
 
             var categoryToAdd = table.CreateSet<Category>().ToList();
-            scenarioContext.Add("Amount", categoryToAdd.Count);
+            scenarioContext.Add(StepConstants.Amount, categoryToAdd.Count);
             nwContext.Categories.AddRange(categoryToAdd);
             nwContext.SaveChanges();
 
             var categoriesAfterAction = nwContext.Categories.ToList();
-            scenarioContext.Add("AmountAfterAction", categoriesAfterAction.Count);
+            scenarioContext.Add(StepConstants.AmountAfterAction, categoriesAfterAction.Count);
         }
 
         [Then(@"data is presented in table")]
         public void ThenDataIsPresentedInTable()
         {
-            amountBeforeAction = scenarioContext.Get<int>("AmountBeforeAction");
-            amount = scenarioContext.Get<int>("Amount");
-            amountAfterAction = scenarioContext.Get<int>("AmountAfterAction");
+            amountBeforeAction = scenarioContext.Get<int>(StepConstants.AmountBeforeAction);
+            amount = scenarioContext.Get<int>(StepConstants.Amount);
+            amountAfterAction = scenarioContext.Get<int>(StepConstants.AmountAfterAction);
             Assert.AreEqual(amountBeforeAction + amount, amountAfterAction);
         }
     }

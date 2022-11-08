@@ -9,11 +9,6 @@ namespace SpecFlowProjectNW.Context
         {
         }
 
-        public NorthwindContext(DbContextOptions<NorthwindContext> options)
-            : base(options)
-        {
-        }
-
         public virtual DbSet<Category> Categories { get; set; } = null!;
         
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
