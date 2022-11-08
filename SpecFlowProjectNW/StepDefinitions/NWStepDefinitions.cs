@@ -62,7 +62,7 @@ namespace SpecFlowProjectNW.StepDefinitions
             amountBeforeAction = scenarioContext.Get<int>(StepConstants.AmountBeforeAction);
             amount = scenarioContext.Get<int>(StepConstants.Amount);
             amountAfterAction = scenarioContext.Get<int>(StepConstants.AmountAfterAction);
-            Assert.AreEqual(amountBeforeAction + amount, amountAfterAction);
+            Assert.AreEqual(amountBeforeAction + amount, amountAfterAction, "\n Table don't contain added data");
         }
     }
 }
