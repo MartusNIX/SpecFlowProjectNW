@@ -18,3 +18,7 @@ Scenario: 3 Changing the record in the table
 	| CategoryName | Description          |
 	| Juice        | Orange, Apple, Birch |
 	Then the new data is shown
+
+Scenario: 4 Delete
+	When the user deletes category
+	Then category not presented in table

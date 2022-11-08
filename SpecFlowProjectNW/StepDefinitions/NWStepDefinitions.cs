@@ -4,6 +4,7 @@ using SpecFlowProjectNW.Models;
 using TechTalk.SpecFlow;
 using TechTalk.SpecFlow.Assist;
 using SpecFlowProjectNW.Constants;
+using Microsoft.EntityFrameworkCore;
 
 namespace SpecFlowProjectNW.StepDefinitions
 {
@@ -73,15 +74,46 @@ namespace SpecFlowProjectNW.StepDefinitions
             if (category != null)
             {
                 var categoryToChange = table.CreateSet<Category>().ToList();
+                scenarioContext.Add("NameFromTable", categoryToChange.ToArray().Last().CategoryName);
                 nwContext.Categories.UpdateRange(categoryToChange);
                 nwContext.SaveChanges();
+
+                var categoriesAfterAction = nwContext.Categories.ToArray().Last();
+                scenarioContext.Add("NameFromDB", categoriesAfterAction.CategoryName);
             }
         }
 
         [Then(@"the new data is shown")]
         public void ThenTheNewDataIsShown()
         {
-            Console.WriteLine("Good");
+            var categoryNameBefore = scenarioContext.Get<string>("NameFromTable");
+            var categoryNameAfter = scenarioContext.Get<string>("NameFromDB");
+            Assert.AreEqual(categoryNameBefore, categoryNameAfter, "\n Data not updated");
+        }
+
+        [When(@"the user deletes category")]
+        public void WhenTheUserDeletesCategory()
+        {
+            var categories = nwContext.Categories.ToList();
+            scenarioContext.Add(StepConstants.AmountBeforeAction, categories.Count);
+
+            Category category = nwContext.Categories.ToArray().Last();
+            if (category != null)
+            {
+                nwContext.Categories.Remove(category);
+                nwContext.SaveChanges();
+            }
+
+            var categoriesAfterAction = nwContext.Categories.ToList();
+            scenarioContext.Add(StepConstants.AmountAfterAction, categoriesAfterAction.Count);
+        }
+
+        [Then(@"category not presented in table")]
+        public void ThenCategoryNotPresentedInTable()
+        {
+            amountBeforeAction = scenarioContext.Get<int>(StepConstants.AmountBeforeAction);
+            amountAfterAction = scenarioContext.Get<int>(StepConstants.AmountAfterAction);
+            Assert.AreEqual(amountBeforeAction - 1, amountAfterAction, "\n Data not deleted");
         }
 
     }
