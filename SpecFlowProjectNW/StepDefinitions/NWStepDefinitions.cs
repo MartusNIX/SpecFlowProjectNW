@@ -15,6 +15,7 @@ namespace SpecFlowProjectNW.StepDefinitions
         private int amountBeforeAction;
         private int amount;
         private int amountAfterAction;
+
         public NWStepDefinitions(ScenarioContext scenarioContext)
         {
             nwContext = new NorthwindContext();
@@ -64,5 +65,24 @@ namespace SpecFlowProjectNW.StepDefinitions
             amountAfterAction = scenarioContext.Get<int>(StepConstants.AmountAfterAction);
             Assert.AreEqual(amountBeforeAction + amount, amountAfterAction, "\n Table don't contain added data");
         }
+
+        [When(@"the user updates the exist data")]
+        public void WhenTheUserUpdatesTheExistData(Table table)
+        {
+            Category category = nwContext.Categories.ToArray().Last();
+            if (category != null)
+            {
+                var categoryToChange = table.CreateSet<Category>().ToList();
+                nwContext.Categories.UpdateRange(categoryToChange);
+                nwContext.SaveChanges();
+            }
+        }
+
+        [Then(@"the new data is shown")]
+        public void ThenTheNewDataIsShown()
+        {
+            Console.WriteLine("Good");
+        }
+
     }
 }

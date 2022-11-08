@@ -12,3 +12,9 @@ Scenario: 2 Creating the record in the table
 	| Craft Drinks | Wine, Gorilka, Samogon    |
 	| Craft Beer   | Goblin, Cat, Chernihivske |
 	Then data is presented in table
+
+Scenario: 3 Changing the record in the table
+	When the user updates the exist data
+	| CategoryName | Description          |
+	| Juice        | Orange, Apple, Birch |
+	Then the new data is shown
