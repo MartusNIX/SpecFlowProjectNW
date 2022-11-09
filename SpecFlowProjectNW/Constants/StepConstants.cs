@@ -11,5 +11,7 @@ namespace SpecFlowProjectNW.Constants
         public const string AmountBeforeAction = "AmountBeforeAction";
         public const string Amount = "Amount";
         public const string AmountAfterAction = "AmountAfterAction";
+        public const string NameFromTable = "NameFromTable";
+        public const string NameFromDB = "NameFromDB";
     }
 }

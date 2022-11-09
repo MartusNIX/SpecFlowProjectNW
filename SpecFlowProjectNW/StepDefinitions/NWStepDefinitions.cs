@@ -4,7 +4,6 @@ using SpecFlowProjectNW.Models;
 using TechTalk.SpecFlow;
 using TechTalk.SpecFlow.Assist;
 using SpecFlowProjectNW.Constants;
-using Microsoft.EntityFrameworkCore;
 
 namespace SpecFlowProjectNW.StepDefinitions
 {
@@ -74,20 +73,20 @@ namespace SpecFlowProjectNW.StepDefinitions
             if (category != null)
             {
                 var categoryToChange = table.CreateSet<Category>().ToList();
-                scenarioContext.Add("NameFromTable", categoryToChange.ToArray().Last().CategoryName);
+                scenarioContext.Add(StepConstants.NameFromTable, categoryToChange.ToArray().Last().CategoryName);
                 nwContext.Categories.UpdateRange(categoryToChange);
                 nwContext.SaveChanges();
 
                 var categoriesAfterAction = nwContext.Categories.ToArray().Last();
-                scenarioContext.Add("NameFromDB", categoriesAfterAction.CategoryName);
+                scenarioContext.Add(StepConstants.NameFromDB, categoriesAfterAction.CategoryName);
             }
         }
 
         [Then(@"the new data is shown")]
         public void ThenTheNewDataIsShown()
         {
-            var categoryNameBefore = scenarioContext.Get<string>("NameFromTable");
-            var categoryNameAfter = scenarioContext.Get<string>("NameFromDB");
+            var categoryNameBefore = scenarioContext.Get<string>(StepConstants.NameFromTable);
+            var categoryNameAfter = scenarioContext.Get<string>(StepConstants.NameFromDB);
             Assert.AreEqual(categoryNameBefore, categoryNameAfter, "\n Data not updated");
         }
 
@@ -115,6 +114,5 @@ namespace SpecFlowProjectNW.StepDefinitions
             amountAfterAction = scenarioContext.Get<int>(StepConstants.AmountAfterAction);
             Assert.AreEqual(amountBeforeAction - 1, amountAfterAction, "\n Data not deleted");
         }
-
     }
 }

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
+﻿
 namespace SpecFlowProjectNW.Models
 {
     public partial class Category
